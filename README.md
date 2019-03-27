@@ -5,7 +5,7 @@
 * [Events](#events)
 * [Forms](#forms)
 
-## <a name"react-basics"></a>React Basics
+## React Basics <a name="react-basics"></a>
 ### Arrays
 
 #### Lists
@@ -98,7 +98,7 @@ const header = <Welcome name="Michael" />;
 ```
 
 ---
-### <a name="events"></a>Events
+### Events <a name="events"></a>
 
 #### Toggle buttons
 You must use bind to use 'this' in the callback
@@ -141,7 +141,7 @@ Two methods for passing extra arguments
 ```
 
 ---
-### Forms<a name='forms'></a>
+### Forms <a name='forms'></a>
 
 #### Controlled Components
 A way of letting JS handle form data (rather than the standard HTML submit). It allows React to override the default HTML behavior. To do this set the form's input value and onChange like so:
