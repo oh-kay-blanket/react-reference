@@ -1,6 +1,27 @@
 # React Reference
 
 <!-- TOC -->
+- [React Basics](#react-basics)
+  - [Arrays](#arrays)
+    - [Lists](#lists)
+  - [Components](#components)
+    - [return()](#return)
+    - [State](#state)
+      - [Lifecycle Methods](#lifecycle-methods)
+        - [componentDidMount()](#componentdidmount)
+        - [componentWillUnmount()](#componentwillunmount)
+      - [setState()](#setstate)
+  - [Elements](#elements)
+  - [Events](#events)
+    - [Toggle buttons](#toggle-buttons)
+    - [Passing arguments](#passing-arguments)
+  - [Forms](#forms)
+    - [Controlled Components](#controlled-components)
+      - [textarea](#textarea)
+      - [select](#select)
+  - [JSX](#jsx)
+
+<!-- TOC END -->
 
 ## React Basics
 ### Arrays
