@@ -1,7 +1,13 @@
 # React Reference
 
-## React Basics
+## Table of Contents
+* [React Basics](#react-basics)
+* [Events](#events)
+* [Forms](#forms)
+
+## <a name"react-basics"></a>React Basics
 ### Arrays
+
 #### Lists
 Using map(), you can render an array as JSX elements. Always use a key attribute when creating lists.
 ```javascript
@@ -36,7 +42,8 @@ const todoItems = todos.map((todo, index) =>
 );
 ```
 
-### Component
+---
+### Components
 Essentially a JS function. It accepts `props` (properties). Props are read only, and should not be modified by the component.
 ```javascript
 function Welcome(props) {
@@ -78,7 +85,9 @@ componentWillUnmount() {
 ##### setState()
 * Never modify state directly, always use  setState().
 * State calls may be asynchronous.
-### Element
+
+---
+### Elements
 Essentially a JS variable. The individual component that holds JSX and gets rendered.  
 ```JavaScript
 const header = <h1>Howdy there</h1>;
@@ -88,13 +97,9 @@ Elements can also represent user-defined components:
 const header = <Welcome name="Michael" />;
 ```
 
-### JSX
-A mix between HTML and JavaScript.  
-```javascript
-<h1>Hello {name}!</h1>;
-```
+---
+### <a name="events"></a>Events
 
-### Events
 #### Toggle buttons
 You must use bind to use 'this' in the callback
 ```JavaScript
@@ -134,6 +139,51 @@ Two methods for passing extra arguments
 <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
-### Forms
+
+---
+### Forms<a name='forms'></a>
+
 #### Controlled Components
-A way of letting JS handle form data (rather than the standard HTML submit).
+A way of letting JS handle form data (rather than the standard HTML submit). It allows React to override the default HTML behavior. To do this set the form's input value and onChange like so:
+```javascript
+<input value={this.state.value} onChange={this.handleChange} />
+```
+Then you can handle the setState() in `handleChange()`.
+
+##### textarea
+In HTML, the `<textarea>` text is handled as a child element.
+```html
+<textarea>
+  Info here.
+</textarea>
+```
+In React, it is handled as a value.
+```javascript
+<textarea value={this.state.value} onChange={this.handleChange} />
+```
+
+##### select
+For a dropdown selection in HTML, the default selection is given a `selected` attribute.
+```html
+<select>
+  <option value="red">Red</option>
+  <option value="green">Green</option>
+  <option selected value="yellow">Yellow</option>
+</select>
+```
+
+In React, it is accessed as a value of the `<select>` element.
+```javascript
+<select value={this.state.value} onChange={this.handleChange}>
+  <option value="red">Red</option>
+  <option value="green">Green</option>
+  <option value="yellow">Yellow</option>
+</select>
+```
+
+---
+### JSX
+A mix between HTML and JavaScript.  
+```javascript
+<h1>Hello {name}!</h1>;
+```
