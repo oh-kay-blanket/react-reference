@@ -1,33 +1,35 @@
 # React Reference
 
 <!-- TOC -->
-- [React Basics](#react-basics)
-  - [Arrays](#arrays)
-    - [Lists](#lists)
-  - [Components](#components)
-    - [return()](#return)
-    - [State](#state)
-      - [Lifecycle Methods](#lifecycle-methods)
-        - [componentDidMount()](#componentdidmount)
-        - [componentWillUnmount()](#componentwillunmount)
-      - [setState()](#setstate)
-  - [Elements](#elements)
-  - [Events](#events)
-    - [Toggle buttons](#toggle-buttons)
-    - [Passing arguments](#passing-arguments)
-  - [Forms](#forms)
-    - [Controlled Components](#controlled-components)
-      - [textarea](#textarea)
-      - [select](#select)
-  - [JSX](#jsx)
+- [Arrays](#arrays)
+  - [Lists](#lists)
+- [Components](#components)
+  - [`return()`](#return)
+  - [State](#state)
+    - [Lifecycle Methods](#lifecycle-methods)
+    - [`componentDidMount()`](#componentdidmount)
+    - [`componentWillUnmount()`](#componentwillunmount)
+    - [`setState()`](#setstate)
+- [Elements](#elements)
+- [Events](#events)
+  - [Toggle buttons](#toggle-buttons)
+  - [Passing arguments](#passing-arguments)
+- [Forms](#forms)
+  - [Controlled Components](#controlled-components)
+    - [textarea](#textarea)
+    - [select](#select)
+  - [Hooks](#hooks)
+    - [`useState`](#usestate)
+    - [`useEffect`](#useeffect)
+    - [`useRef`](#useref)
+- [JSX](#jsx)
 
 <!-- TOC END -->
 
-## React Basics
-### Arrays
+# Arrays
 
-#### Lists
-Using map(), you can render an array as JSX elements. Always use a key attribute when creating lists.
+## `map()`
+Renders an array as JSX elements. Always use a key attribute when creating lists.
 ```javascript
 class NameList extends Component {
   const names = ['donna', 'beverly', 'claire', 'beatrice', 'meg', 'bonita'];
@@ -42,6 +44,7 @@ class NameList extends Component {
   );
 }
 ```
+
 Ideally you will build lists that use unique IDs as keys:
 ```javascript
 const todoItems = todos.map((todo) =>
@@ -50,6 +53,7 @@ const todoItems = todos.map((todo) =>
   </li>
 );
 ```
+
 However, if that's not possible, you can use the items index. This is not recommended as indices may change:
 ```JavaScript
 const todoItems = todos.map((todo, index) =>
@@ -60,8 +64,9 @@ const todoItems = todos.map((todo, index) =>
 );
 ```
 
----
-### Components
+
+# Components
+
 Essentially a JS function. It accepts `props` (properties). Props are read only, and should not be modified by the component.
 ```javascript
 function Welcome(props) {
@@ -69,6 +74,7 @@ function Welcome(props) {
 }
 ```
 Normally you will use an ES6 class to define a component:
+
 ```javascript
 class Welcome extends React.Component {
   render() {
@@ -76,15 +82,17 @@ class Welcome extends React.Component {
   }
 }
 ```
-#### return()
+
+### `return()`
 What is returned when that component (function) is called.
 
-#### State
+### State
 Similar to props, but it is private and fully controlled by the component.
 
-##### Lifecycle Methods
+#### Lifecycle Methods
 Help to ensure recurring events don't take up too many resources.
-###### componentDidMount()
+
+#### `componentDidMount()`
 This runs after the component has been rendered to the DOM. A good place for a timer.
 ```javascript
 componentDidMount() {
@@ -94,19 +102,23 @@ componentDidMount() {
       );
 }
 ```
-###### componentWillUnmount()
+
+#### `componentWillUnmount()`
+
 ```javascript
 componentWillUnmount() {
   clearInterval(this.timerID);
 }
 ```
-##### setState()
+
+#### `setState()`
 * Never modify state directly, always use  setState().
 * State calls may be asynchronous.
 
----
-### Elements
+
+# Elements
 Essentially a JS variable. The individual component that holds JSX and gets rendered.  
+
 ```JavaScript
 const header = <h1>Howdy there</h1>;
 ```
@@ -115,11 +127,12 @@ Elements can also represent user-defined components:
 const header = <Welcome name="Michael" />;
 ```
 
----
-### Events
 
-#### Toggle buttons
+# Events
+
+### Toggle buttons
 You must use bind to use 'this' in the callback
+
 ```JavaScript
 class Toggle extends React.Component {
   constructor(props) {
@@ -151,37 +164,41 @@ ReactDOM.render(
 );
 ```
 
-#### Passing arguments
+### Passing arguments
 Two methods for passing extra arguments
+
 ```javascript
 <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 
----
-### Forms
 
-#### Controlled Components
+# Forms
+
+### Controlled Components
 A way of letting JS handle form data (rather than the standard HTML submit). It allows React to override the default HTML behavior. To do this set the form's input value and onChange like so:
 ```javascript
 <input value={this.state.value} onChange={this.handleChange} />
 ```
 Then you can handle the setState() in `handleChange()`.
 
-##### textarea
+#### textarea
 In HTML, the `<textarea>` text is handled as a child element.
+
 ```html
 <textarea>
   Info here.
 </textarea>
 ```
+
 In React, it is handled as a value.
 ```javascript
 <textarea value={this.state.value} onChange={this.handleChange} />
 ```
 
-##### select
+#### select
 For a dropdown selection in HTML, the default selection is given a `selected` attribute.
+
 ```html
 <select>
   <option value="red">Red</option>
@@ -200,10 +217,9 @@ In React, it is accessed as a value of the `<select>` element.
 ```
 
 
----
-### Hooks
+## Hooks
 
-#### useState
+### `useState`
 Returns and sets stateful values.
 
 ```javascript
@@ -223,7 +239,7 @@ return (
 )
 ```
 
-#### useEffect
+### `useEffect`
 Accepts a function that contains imperative, possibly effectful code.
 
 ```javascript
@@ -249,8 +265,9 @@ return (
 ```
 
 
-#### useRef hook
+### `useRef`
 useRef returns a mutable ref object whose .current property is initialized to the passed argument (initialValue). The returned object will persist for the full lifetime of the component.
+
 ```JavaScript
 import React,{ useRef } from 'react';
 
@@ -269,8 +286,8 @@ function TextInputWithFocusButton() {
 }
 ```
 
----
-### JSX
+
+# JSX
 A mix between HTML and JavaScript.  
 ```javascript
 <h1>Hello {name}!</h1>;
