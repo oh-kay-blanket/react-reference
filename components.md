@@ -28,7 +28,9 @@
 * Generally, components should be placed into at least one sub-folder.
 * User Upper Camel Case for component names.
 
-Example component:
+### Function Component
+Useful when state is not kept. Cleaner text. Better performance.
+
 ```JavaScript
 import React from 'react'
 
@@ -44,39 +46,57 @@ function Info(props) {
 export default Info
 ```
 
-Essentially a JS function. It accepts `props` (properties). Props are read only, and should not be modified by the component.
-```javascript
-function Welcome(props) {
-  return <h1>Hello, {props.name}<h1>;
-}
-```
-Normally you will use an ES6 class to define a component:
+### Class Components
+Use this when you will need to manage state.  
 
 ```javascript
-class Welcome extends React.Component {
-  render() {
-    return <h1>Hello, {this.props.name}</h1>;
+import React, { Component } from 'react'
+
+class Welcome extends Component {
+
+  // add other methods here
+
+  render() { // render() method is required.
+
+    const date = new Date() // display/style logic goes here
+
+    return <h1>`Hello, ${this.props.name}. It is ${date}.`</h1>
   }
 }
 ```
+
+
 
 # Arrays
 
 ## `map()`
 Renders an array as JSX elements. Always use a key attribute when creating lists.
 ```javascript
-class NameList extends Component {
-  const girls = ['Monica in my life', 'Erica by my side', 'Rita is all I need', 'Tina is what I see', 'Sandra in the sun', 'Mary all night long', 'Jessica, here I am', 'You makes me a man']
-  const girlElements = girls.map(girl =>
-    <li key={girl.toString()}>
-      A little bit of {girl}
-    </li>
-  )
+
+function NameList() {
+  const girlsList = [
+    {id: 1, name: 'Monica', preposition: 'in my life'},
+    {id: 2, name: 'Erica', preposition: 'by my side'},
+    {id: 3, name: 'Rita', preposition: 'is all I need'},
+    {id: 4, name: 'Tina', preposition: 'is what I see'},
+    {id: 5, name: 'Sandra', preposition: 'in the sun'},
+    {id: 6, name: 'Mary', preposition: 'all night long'},
+    {id: 7, name: 'Jessica', preposition: 'here I am'},
+    {id: 8, name: 'You', preposition: 'makes me a man'}
+  ]
+
+  const girlsComponents = girlsList.map(girl => <Name key={girl.id} info={girl} />)
 
   return (
     <ul>
-      {girlElements}
+      {girlsComponents}
     </ul>
+  )
+}
+
+function Name(props) {
+  return (
+    <li style={{listStyleType: 'none'}}>{`A little bit of ${props.info.name} ${props.info.preposition}`}</li>
   )
 }
 ```
@@ -104,9 +124,60 @@ const todoItems = todos.map((todo, index) =>
 # State
 Similar to props, but it is private and fully controlled by the component.
 
+```JavaScript
+import React, { Component } from 'react'
+
+class App extends Component {
+  constructor() { // this method is required when using state
+    super()
+    this.state = { // state is always an object
+      answer: 'yes'
+    }
+  }
+
+  render() {
+    return (
+      <div>
+          <h1>`Is state important to know?`</h1>
+          <h2>{this.state.answer}</h2>
+      </div>
+    )
+  }
+}
+```
+
+
+# Conditional Rendering
+
 
 
 # Events
+All event listeners will use camelCase:
+* onClick
+* onMouseOver
+* onChange  
+
+See all  [supported events](https://reactjs.org/docs/events.html#supported-events)
+
+
+## Handling Event
+Put handler method above render method.
+```javascript
+class App extends React.Component {
+  constructor() {
+    super()
+  }
+
+  handleClick() {
+    alert("OUCH")
+  }
+
+  render() {
+    return (<button onClick={this.handleClick}>Touch Me</button>)
+  }
+}
+```
+
 
 ### Toggle buttons
 You must use bind to use 'this' in the callback
@@ -141,6 +212,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
 
 ### Passing arguments
 Two methods for passing extra arguments
