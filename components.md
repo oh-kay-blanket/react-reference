@@ -3,20 +3,29 @@
 <!-- TOC -->
 - [General](#general)
   - [File Structure](#file-structure)
-- [Arrays](#arrays)
-  - [`map()`](#map)
+    - [Function Component](#function-component)
+    - [Class Components](#class-components)
+- [Mapping Components](#mapping-components)
 - [State](#state)
-- [Events](#events)
-  - [Toggle buttons](#toggle-buttons)
-  - [Passing arguments](#passing-arguments)
+  - [Passing State](#passing-state)
+  - [Handling Events](#handling-events)
+  - [Changing State](#changing-state)
+    - [`setState()`](#setstate)
+    - [Passing Arguments](#passing-arguments)
+- [Lifecycle Methods](#lifecycle-methods)
+  - [`render()`](#render)
+  - [`componentDidMount()`](#componentdidmount)
+  - [`componentDidUpdate()`](#componentdidupdate)
+  - [`getDerivedStateFromProps(props, state)`](#getderivedstatefrompropsprops-state)
+  - [`getSnapshotBeforeUpdate()`](#getsnapshotbeforeupdate)
+  - [`componentWillReceiveProps(nextProps)` (depreciated method)](#componentwillreceivepropsnextprops-depreciated-method)
+  - [`shouldComponentUpdate(nextProps, nextState)`](#shouldcomponentupdatenextprops-nextstate)
+  - [`componentWillUnmount()`](#componentwillunmount)
+- [Conditional Rendering](#conditional-rendering)
 - [Forms](#forms)
   - [Controlled Components](#controlled-components)
     - [textarea](#textarea)
     - [select](#select)
-- [Lifecycle Methods](#lifecycle-methods)
-  - [`componentDidMount()`](#componentdidmount)
-  - [`componentWillUnmount()`](#componentwillunmount)
-  - [`setState()`](#setstate)
 
 <!-- TOC END -->
 
@@ -67,9 +76,7 @@ class Welcome extends Component {
 
 
 
-# Arrays
-
-## `map()`
+# Mapping Components
 Renders an array as JSX elements. Always use a key attribute when creating lists.
 ```javascript
 
@@ -146,12 +153,37 @@ class App extends Component {
 }
 ```
 
+## Passing State
+State can be passed down through child components just like any other prop.
 
-# Conditional Rendering
+```javascript
+import React, { Component } from 'react'
 
+class Parent extends Component {
+  constructor() { // this method is required when using state
+    super()
+    this.state = { // state is always an object
+      answer: 'yes'
+    }
+  }
 
+  render() {
+    return <Child answer={this.state.answer} />
+  }
+}
 
-# Events
+class Child extends Component {
+  constructor() {
+    super()
+  }
+
+  render() {
+    return <p>{this.props.answer}</p>
+  }
+}
+```
+
+## Handling Events
 All event listeners will use camelCase:
 * onClick
 * onMouseOver
@@ -160,66 +192,177 @@ All event listeners will use camelCase:
 See all  [supported events](https://reactjs.org/docs/events.html#supported-events)
 
 
-## Handling Event
-Put handler method above render method.
-```javascript
-class App extends React.Component {
+## Changing State
+Can be done via `setState()` or Hooks. You should never change the state (prevState), but rather return a new object, which is a modification of prevState.
+
+### `setState()`
+```JavaScript
+class App extends Component {
   constructor() {
     super()
+    this.state = {
+      count: 0
+    }
+
+    this.handleClick = this.handleClick.bind(this) // a constructor method which uses `setState()` must be bound in the constructor like this
   }
 
+  // Put handle...() above render().
   handleClick() {
-    alert("OUCH")
-  }
+    // if you don't care what the previous state was, you can just pass a new object in.
+    // this.setState({ count: 1 })
 
-  render() {
-    return (<button onClick={this.handleClick}>Touch Me</button>)
-  }
-}
-```
-
-
-### Toggle buttons
-You must use bind to use 'this' in the callback
-
-```JavaScript
-class Toggle extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isToggleOn: true};
-
-    // This binding is necessary to make `this` work in the callback
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-    }));
+    // if the new state relies on the old state, you must pass a function as the parameter in `setState()`
+    this.setState(prevState => {
+      return { count: prevState.count + 1 }
+    })
   }
 
   render() {
     return (
-      <button onClick={this.handleClick}>
-        {this.state.isToggleOn ? 'ON' : 'OFF'}
-      </button>
-    );
+      <Child handleClick={this.handleClick} count={this.state.count} />
+    )
   }
 }
 
-ReactDOM.render(
-  <Toggle />,
-  document.getElementById('root')
-);
+function Child(props) {
+  <div>
+    <h1>{props.count}</h1>
+    <button onClick={props.handleClick}>Add</button> // for class methods, you must use `this`  beforehand.
+  </div>
+}
+
 ```
 
 
-### Passing arguments
-Two methods for passing extra arguments
+### Passing Arguments
+If you call a method with arguments, it will fire upon page render
+```javascript
+<button onClick={handleClick(id)}>Click me</button> // This will fire upon rendering
+```
+
+Instead, create a new function, which returns the handler() method.
+```javascript
+// These will only fire when clicked
+<button onClick={() => this.handleClick(id)}>Click me</button>
+<button onClick={this.handleClick.bind(this, id)}>Click me</button>
+```
+
+
+
+# Lifecycle Methods
+Help to ensure recurring events don't take up too many resources.
+
+https://engineering.musefind.com/react-lifecycle-methods-how-and-when-to-use-them-2111a1b692b1
+https://reactjs.org/blog/2018/03/29/react-v-16-3.html#component-lifecycle-changes
+
+### `render()`
+Affects how the component is displayed.
+
+
+### `componentDidMount()`
+Runs once, immediately after the component is mounted (rendered) to the screen. Will not run on subsequent mounts. Often `componentDidMount()` will process getting data from an API.
 
 ```javascript
-<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
-<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+componentDidMount() {
+  this.timerID = setInterval(
+    () => this.tick(),
+    1000
+  );
+}
+```
+
+
+### `componentDidUpdate()`
+Won't run on initial mount, like `componentDidMount()`, but will run on subsequent mounts, after render.
+
+```JavaScript
+componentDidUpdate() {
+
+}
+```
+
+
+### `getDerivedStateFromProps(props, state)`
+A static method. You mostly should not use this.
+
+
+### `getSnapshotBeforeUpdate()`
+Not commonly used. Takes a snapshot of state before change is made.
+
+
+### `componentWillReceiveProps(nextProps)` (depreciated method)
+This runs whenever the component receives props from a parent component. Runs the every time a parent component sends props to child. Can be useful for checking whether new props passed are different from existing props. If so, you can decide to run a process on those props.
+
+```javascript
+componentWillReceiveProps(nextProps) {
+  if (nextProps.info !== this.info) {
+    // process data
+  }
+}
+```
+
+
+### `shouldComponentUpdate(nextProps, nextState)`
+Looks at update being pushed and decides whether or not the component actually needs to be updated.
+
+```javascript
+shouldComponentUpdate(nextProps, nextState) {
+  // return true if want it to update
+  // return false if not
+}
+```
+
+
+### `componentWillUnmount()`
+Can choose to remove components.
+
+```javascript
+componentWillUnmount() {
+  // teardown or cleanup your code before your component disappears
+  // remove event listener
+}
+```
+
+
+# Conditional Rendering
+There are many ways to do conditional rendering. There are some useful methods.
+
+## Ternary Conditionals
+```JavaScript
+class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      isLoading: true,
+      didMount: false
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ isLoading: false })}, 1500)
+  }
+
+  componentDidUpdate() {
+    !this.state.didMount && // Without this, componentDidUpdate() will cause a re-render on infinite loop
+    setTimeout(() => {
+      this.setState({ didMount: true })}, 2500)
+  }
+
+  render() {
+    return (
+      <>
+        {this.state.isLoading ? <h2>Loading...</h2> : <Conditional />}
+        {this.state.didMount && <p>`Pssst...we're all done here.`}
+      </>
+    )
+  }
+}
+
+function Conditional(props) {
+  return <h2>Here is that data you wanted</h2>
+}
 ```
 
 
@@ -265,31 +408,3 @@ In React, it is accessed as a value of the `<select>` element.
   <option value="yellow">Yellow</option>
 </select>
 ```
-
-
-
-# Lifecycle Methods
-Help to ensure recurring events don't take up too many resources.
-
-### `componentDidMount()`
-This runs after the component has been rendered to the DOM. A good place for a timer.
-```javascript
-componentDidMount() {
-  this.timerID = setInterval(
-        () => this.tick(),
-        1000
-      );
-}
-```
-
-### `componentWillUnmount()`
-
-```javascript
-componentWillUnmount() {
-  clearInterval(this.timerID);
-}
-```
-
-### `setState()`
-* Never modify state directly, always use  setState().
-* State calls may be asynchronous.
