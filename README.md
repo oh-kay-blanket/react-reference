@@ -15,4 +15,5 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 [Components](components.md)  
 [JSX](jsx.md)  
+[Forms](forms.md)  
 [Hooks](hooks.md)

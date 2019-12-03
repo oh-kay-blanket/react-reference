@@ -22,10 +22,7 @@
   - [`shouldComponentUpdate(nextProps, nextState)`](#shouldcomponentupdatenextprops-nextstate)
   - [`componentWillUnmount()`](#componentwillunmount)
 - [Conditional Rendering](#conditional-rendering)
-- [Forms](#forms)
-  - [Controlled Components](#controlled-components)
-    - [textarea](#textarea)
-    - [select](#select)
+  - [Ternary Conditionals](#ternary-conditionals)
 
 <!-- TOC END -->
 
@@ -363,48 +360,4 @@ class App extends Component {
 function Conditional(props) {
   return <h2>Here is that data you wanted</h2>
 }
-```
-
-
-# Forms
-
-### Controlled Components
-A way of letting JS handle form data (rather than the standard HTML submit). It allows React to override the default HTML behavior. To do this set the form's input value and onChange like so:
-```javascript
-<input value={this.state.value} onChange={this.handleChange} />
-```
-Then you can handle the setState() in `handleChange()`.
-
-#### textarea
-In HTML, the `<textarea>` text is handled as a child element.
-
-```html
-<textarea>
-  Info here.
-</textarea>
-```
-
-In React, it is handled as a value.
-```javascript
-<textarea value={this.state.value} onChange={this.handleChange} />
-```
-
-#### select
-For a dropdown selection in HTML, the default selection is given a `selected` attribute.
-
-```html
-<select>
-  <option value="red">Red</option>
-  <option value="green">Green</option>
-  <option selected value="yellow">Yellow</option>
-</select>
-```
-
-In React, it is accessed as a value of the `<select>` element.
-```javascript
-<select value={this.state.value} onChange={this.handleChange}>
-  <option value="red">Red</option>
-  <option value="green">Green</option>
-  <option value="yellow">Yellow</option>
-</select>
 ```
