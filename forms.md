@@ -34,7 +34,7 @@ handleChange(event) {
 }
 
 // render() {...
-<input type={text} value={this.state.value} onChange={this.handleChange} />
+<input type='text' value={this.state.value} onChange={this.handleChange} />
 ```
 Then you can handle the setState() in `handleChange()`.
 

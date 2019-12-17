@@ -3,8 +3,14 @@
 <!-- TOC -->
 - [General](#general)
   - [File Structure](#file-structure)
-    - [Function Component](#function-component)
-    - [Class Components](#class-components)
+    - [Containers & Component Architecture](#containers--component-architecture)
+  - [Function Component](#function-component)
+  - [Class Components](#class-components)
+- [Props](#props)
+  - [Default Props](#default-props)
+  - [Prop Types](#prop-types)
+- [Class Methods](#class-methods)
+- [Children](#children)
 - [Mapping Components](#mapping-components)
 - [State](#state)
   - [Passing State](#passing-state)
@@ -34,25 +40,28 @@
 * Generally, components should be placed into at least one sub-folder.
 * User Upper Camel Case for component names.
 
-### Function Component
+### Containers & Component Architecture
+A methodology for separating business logic from presentation rendering. Rather than have one large component with long handle...() methods and many <html> tags, split it into two components and pass the state as props. The business component would be the "container" and the presentation area would be the "component".
+
+
+## Function Component
 Useful when state is not kept. Cleaner text. Better performance.
 
 ```JavaScript
 import React from 'react'
 
-function Info(props) {
-  return (
-    <>
-      <h1>About {props.title}</h1>
-      <p>And some more info here</p>
-    </>
-  )
-}
+const Info = props => (
+  <>
+    <h1>About {props.title}</h1>
+    <p>And some more info here</p>
+  </>
+)
 
 export default Info
 ```
 
-### Class Components
+
+## Class Components
 Use this when you will need to manage state.  
 
 ```javascript
@@ -69,6 +78,147 @@ class Welcome extends Component {
     return <h1>`Hello, ${this.props.name}. It is ${date}.`</h1>
   }
 }
+```
+
+
+
+# Props
+Function components use `prop.property`, Class components use `this.props.property`.
+
+## Default Props
+A default props can by set with FunctionName.defaultProps = { key: value }  
+
+As a function component:
+```JavaScript
+function Card(props) {
+    const styles = {
+        backgroundColor: props.cardColor,
+        height: props.height,
+        width: props.width
+    }
+
+    return (
+        <div style={styles}></div>
+    )
+}
+
+Card.defaultProps = {
+    cardColor: "blue",
+    height: 100,
+    width: 100
+}
+```
+
+As a class component:
+```JavaScript
+class Card extends Component {
+  static defaultProps = {
+    cardColor: "blue",
+    height: 100,
+    width: 100
+  }
+
+  render() {
+    const styles = {
+      backgroundColor: this.props.cardColor,
+      height: this.props.height,
+      width: this.props.width
+    }
+
+    return (
+      <div style={styles}></div>
+    )
+  }
+}
+```
+
+
+## Prop Types
+A good way to validate incoming data. Now a separate library. Useful only for development. Gives a warning when listed type is not met. Can also set required props.
+
+[Docs](https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes)
+
+`npm i prop-types`
+
+```JavaScript
+import React from 'react'
+import PropTypes from 'prop-types'
+
+class Card extends Component {
+  static defaultProps = {
+    height: 100,
+    width: 100
+  }
+
+  static propTypes = {
+    cardColor: PropTypes.oneOf(['red', 'blue']).isRequired, // this will be a required prop
+    height: PropTypes.number,
+    width: PropTypes.number
+  }
+
+  render() {
+    const styles = {
+      backgroundColor: this.props.cardColor,
+      height: this.props.height,
+      width: this.props.width
+    }
+
+    return (
+      <div style={styles}></div>
+    )
+  }
+}
+```
+
+
+# Class Methods
+If you use an arrow function to declare methods, you don't need to bind that method in the constructor
+```javascript
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {}
+  }
+
+  handleChange = event => {
+
+  }
+}
+```
+
+
+
+# Children
+Normally, components are self-closing:
+```javascript
+const App () => (
+  <>
+    <CTA />
+  </>
+)
+
+const CTA = () => (
+  <>
+    <h1>Howdy there</h1>
+  </>
+)
+```
+
+If a sub-component is used with open and closed tags, it can then accept children, which are accessible via `props.children`. This is handy when you might have a component that has a particular styling (such as a Call to Action), but might differ wildly in regards to what content it hosts.
+```javascript
+const App () => (
+  <>
+    <CTA>
+      <h1>Howdy there</h1>
+    </CTA>
+  </>
+)
+
+const CTA = (props) => (
+  <div className="cta">
+    {props.children}
+  </div>
+)
 ```
 
 
@@ -200,12 +350,10 @@ class App extends Component {
     this.state = {
       count: 0
     }
-
-    this.handleClick = this.handleClick.bind(this) // a constructor method which uses `setState()` must be bound in the constructor like this
   }
 
   // Put handle...() above render().
-  handleClick() {
+  handleClick = () => {
     // if you don't care what the previous state was, you can just pass a new object in.
     // this.setState({ count: 1 })
 
@@ -242,13 +390,12 @@ Instead, create a new function, which returns the handler() method.
 ```javascript
 // These will only fire when clicked
 <button onClick={() => this.handleClick(id)}>Click me</button>
-<button onClick={this.handleClick.bind(this, id)}>Click me</button>
 ```
 
 
 
 # Lifecycle Methods
-Help to ensure recurring events don't take up too many resources.
+Help to ensure recurring events don't take up too many resources. These work only on class components.
 
 https://engineering.musefind.com/react-lifecycle-methods-how-and-when-to-use-them-2111a1b692b1
 https://reactjs.org/blog/2018/03/29/react-v-16-3.html#component-lifecycle-changes
@@ -301,12 +448,14 @@ componentWillReceiveProps(nextProps) {
 
 
 ### `shouldComponentUpdate(nextProps, nextState)`
-Looks at update being pushed and decides whether or not the component actually needs to be updated.
+Looks at update being pushed and decides whether or not the component actually needs to be updated. Generally, you won't use this and will instead use a `PureComponent`.
 
 ```javascript
 shouldComponentUpdate(nextProps, nextState) {
-  // return true if want it to update
-  // return false if not
+    if (nextProps.count === this.props.count) {
+        return false // won't update
+    }
+    return true // will update
 }
 ```
 
