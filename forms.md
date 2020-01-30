@@ -155,7 +155,7 @@ render() {
 Create an `handleSubmit()` method to handle submits. Add that method to the `<form>` tag.
 
 ```JavaScript
-<form onSubmit={this.handleSubmit}>
+<form onSubmit={handleSubmit}>
   <button>Submit</button>
 </form>
 ```

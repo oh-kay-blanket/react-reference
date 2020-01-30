@@ -175,10 +175,7 @@ class Card extends Component {
 If you use an arrow function to declare methods, you don't need to bind that method in the constructor
 ```javascript
 class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {}
-  }
+  state = {}
 
   handleChange = event => {
 
@@ -282,11 +279,8 @@ Similar to props, but it is private and fully controlled by the component.
 import React, { Component } from 'react'
 
 class App extends Component {
-  constructor() { // this method is required when using state
-    super()
-    this.state = { // state is always an object
-      answer: 'yes'
-    }
+  state = { // state is always an object
+    answer: 'yes'
   }
 
   render() {
@@ -307,11 +301,8 @@ State can be passed down through child components just like any other prop.
 import React, { Component } from 'react'
 
 class Parent extends Component {
-  constructor() { // this method is required when using state
-    super()
-    this.state = { // state is always an object
-      answer: 'yes'
-    }
+  state = { // state is always an object
+    answer: 'yes'
   }
 
   render() {
@@ -319,15 +310,10 @@ class Parent extends Component {
   }
 }
 
-class Child extends Component {
-  constructor() {
-    super()
-  }
+const Child = props => (
+  <p>{props.answer}</p>
+)
 
-  render() {
-    return <p>{this.props.answer}</p>
-  }
-}
 ```
 
 ## Handling Events
@@ -345,11 +331,8 @@ Can be done via `setState()` or Hooks. You should never change the state (prevSt
 ### `setState()`
 ```JavaScript
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      count: 0
-    }
+  state = {
+    count: 0
   }
 
   // Put handle...() above render().
@@ -370,12 +353,12 @@ class App extends Component {
   }
 }
 
-function Child(props) {
+const Child = props => (
   <div>
     <h1>{props.count}</h1>
     <button onClick={props.handleClick}>Add</button> // for class methods, you must use `this`  beforehand.
   </div>
-}
+)
 
 ```
 
@@ -383,7 +366,7 @@ function Child(props) {
 ### Passing Arguments
 If you call a method with arguments, it will fire upon page render
 ```javascript
-<button onClick={handleClick(id)}>Click me</button> // This will fire upon rendering
+<button onClick={this.handleClick(id)}>Click me</button> // This will fire upon rendering
 ```
 
 Instead, create a new function, which returns the handler() method.
@@ -452,10 +435,10 @@ Looks at update being pushed and decides whether or not the component actually n
 
 ```javascript
 shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.count === this.props.count) {
-        return false // won't update
-    }
-    return true // will update
+  if (nextProps.count === this.props.count) {
+    return false // won't update
+  }
+  return true // will update
 }
 ```
 
@@ -477,12 +460,10 @@ There are many ways to do conditional rendering. There are some useful methods.
 ## Ternary Conditionals
 ```JavaScript
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      isLoading: true,
-      didMount: false
-    }
+
+  state = {
+    isLoading: true,
+    didMount: false
   }
 
   componentDidMount() {

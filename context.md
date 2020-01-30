@@ -11,41 +11,56 @@ Context is split into two parts - the Provider and the Consumer. The Provider ho
 ## `createContext()`
 Creates a context object with Provider and Consumer properties.
 
-When the Provider is called, it must always be passed with a `value` prop.
 
-`themeContext.js`
-```JavaScript
-import React from "react"
-const ThemeContext = React.createContext()
-export default ThemeContext
-```
-
-`index.js`
+`index.js` - Where the context is held
 ```JavaScript
 import App from "./App"
-import ThemeContext from "./themeContext"
+import {ThemeContextProvider} from "./themeContext"
 
 ReactDOM.render(
-  <ThemeContext.Provider value={"light"}>
+  <ThemeContextProvider>
     <App />
-  </ThemeContext.Provider>
+  </ThemeContextProvider>
   , document.getElementById("root"))
 ```
 
-## contextType
-This is essentially assigning which context (assuming you may have created multiple) to use.
+When the Provider is called, it must always be passed with a `value` prop.
 
+`themeContext.js` - The Provider
 ```JavaScript
-import ThemeContext from "./themeContext"
+import React from "react"
+const {Provider, Consumer} = React.createContext()
 
-class Button extends Component {
-    render() {
-        const theme = this.context
-        return (
-            <button className={`${theme}-theme`}>Switch Theme</button>
-        )    
-    }
+class ThemeContextProvider extends React.Component {
+  state = {
+    theme: "dark"
+  }
+
+  toggleTheme = () => {
+    this.setState(prevState => ({ theme: prevState.theme === "light" ? "dark" : "light" }))
+  }
+
+  render() {
+    return (
+      <Provider value={{ theme: this.state.theme, toggleTheme: this.toggleTheme }}>
+        {this.props.children}
+      </Provider>
+    )
+  }
 }
 
-Button.contextType = ThemeContext // pulls in ThemeContext
+export {ThemeContextProvider, Consumer as ThemeContextConsumer}
+```
+
+`button.js` - A Consumer
+```JavaScript
+import {ThemeContextConsumer} from "./themeContext"
+
+const Button = props => (
+  <ThemeContextConsumer>
+    {context => (
+      <button onClick={context.toggleTheme} className={`${context.theme}-theme`}>Switch Theme</button>      
+    )}
+  </ThemeContextConsumer>
+)    
 ```
