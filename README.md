@@ -1,10 +1,10 @@
 # React Reference
 
-[JSX](jsx.md)  
 [Components](components.md)  
+[Context](context.md)  
 [Forms](forms.md)  
-[Reusability](reusability.md)  
-[Performance](performance.md)
 [Hooks](hooks.md)  
-[Context](context.md)   
-[Router] (router.md)
+[JSX](jsx.md)  
+[Performance](performance.md)  
+[Reusability](reusability.md)  
+[Router](router.md)
