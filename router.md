@@ -83,10 +83,58 @@ import {Link, Switch, Route} from "react-router-dom";
 
 ## Hooks
 
+### `useParams`
+Returns an object of key/value pairs of URL params. Use it to access match.params of the current <Route>.
+
+```javascript
+// Parent
+// Use : to denote a variable
+<Route path="/services/:serviceId" >
+    <ServiceDetail />
+</Route>
+
+// Child
+import {useParams} from "react-router-dom"
+...
+const {serviceId} = useParams()
+const thisService = servicesData.find(service => service._id === serviceId)
+
+```
+
+### `useRouteMatch`
+Adopts parent path rather than hardcoding. 
+
+```javascript
+import {Link, Switch, Route, useRouteMatch} from "react-router-dom"
+
+import Settings from "./Settings"
+import Info from "./Info"
+
+function Profile() {
+    const {path, url} = useRouteMatch()
+    // https://reacttraining.com/blog/react-router-v5-1/#useroutematch
+
+    return (
+        <div>
+            <h1>Profile Page</h1>
+            <ul>
+                <li><Link to={`${url}/info`}>Profile Info</Link></li>
+                <li><Link to={`${url}/settings`}>Profile Settings</Link></li>
+            </ul>
+            
+            <Switch>
+                <Route path={`${path}/info`}>
+                    <Info/>
+                </Route>
+                <Route path={`${path}/settings`}>
+                    <Settings/>
+                </Route>
+            </Switch>
+        </div>
+    )
+}
+```
+
 ### `useHistory`
 
 ### `useLocation`
-
-### `useParams`
-
-### `useRouteMatch`
